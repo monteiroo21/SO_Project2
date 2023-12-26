@@ -183,7 +183,8 @@ static void processOrder ()
     }
 
     //TODO insert your code here
-    sh->fSt.waiterRequest; // não sei se basta fazer isto
+    sh->fSt.waiterRequest.reqType = lastGroup; // não sei se basta fazer isto
+    sh->fSt.waiterRequest.reqGroup = -1; // em probDataStruct.h diz (dummy if request source is chef)
     sh->fSt.st.chefStat = REST; // acho que descansar é no final
     saveState(nFic, &sh->fSt);
 
