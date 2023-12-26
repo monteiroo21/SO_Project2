@@ -117,7 +117,7 @@ int main (int argc, char *argv[])
     }
    
     /* create log file */
-    createLog (nFic, &sh->fSt);                                  
+    createLog (nFic, &sh->fSt); // Titulo da impressão no terminal                           
     saveState(nFic,&sh->fSt);
 
     /* initialize semaphore ids */

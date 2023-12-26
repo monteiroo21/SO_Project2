@@ -56,7 +56,7 @@ static void processOrder ();
  *  Its role is to generate the life cycle of one of intervening entities in the problem: the chef.
  */
 int main (int argc, char *argv[])
-{
+{   
     int key;                                          /*access key to shared memory and semaphore set */
     char *tinp;                                                     /* numerical parameters test flag */
 
@@ -127,14 +127,15 @@ static void waitForOrder ()
 {
 
     //TODO insert your code here
-    // Nota: não sei se não deveriam ser dentro do if()
-    sh->fSt.st.chefStat = WAIT_FOR_ORDER;
-    saveState(nFic,&sh->fSt);
 
     if (semDown (semgid, sh->waitOrder) == -1) {                                               /* enter critical region */
         perror ("error on the down operation for semaphore access");
         exit (EXIT_FAILURE);
-    }    
+    }
+    // Nota: acho que deve ser dentro do if() como fiz
+    sh->fSt.st.chefStat = WAIT_FOR_ORDER;
+    saveState(nFic,&sh->fSt);    
+    
 
     // Fim
      
@@ -144,11 +145,12 @@ static void waitForOrder ()
     }
 
     //TODO insert your code here
-
-    sh->fSt.foodOrder = 0;
     sh->fSt.st.chefStat = COOK;
+    
     saveState(nFic,&sh->fSt);
 
+    sh->fSt.foodOrder = 0; // flag of food request from waiter to chef
+    lastGroup = sh->fSt.foodGroup; // foddGroup -> group associated to food request from waiter to chef 
     // Fim
 
     if (semUp (semgid, sh->mutex) == -1) {                                                      /* exit critical region */
@@ -157,6 +159,13 @@ static void waitForOrder ()
     }
 
     //TODO insert your code here
+
+    // semáforo orderReceived -> Received order should be acknowledged.
+    if (semUp (semgid, sh->orderReceived) == -1) {                                               /* enter critical region */
+        perror ("error on the down operation for semaphore access");
+        exit (EXIT_FAILURE);
+    }
+    
 
     // Fim
 }
@@ -174,7 +183,15 @@ static void processOrder ()
     usleep((unsigned int) floor ((MAXCOOK * random ()) / RAND_MAX + 100.0));
 
     //TODO insert your code here
+    
+    /** signals the waiter that food is ready -> "unsigned int waiterRequestPossible" -> identification of semaphore used by groups and chef to wait before issuing waiter request - val = 1 */
+    if (semDown (semgid, sh->waiterRequestPossible) == -1) {                                                      /* enter critical region */
+        perror ("error on the up operation for semaphore access (PT)");
+        exit (EXIT_FAILURE);
+    }      
 
+    // sh->fSt.waiterRequest.reqGroup = lastGroup;
+    sh->fSt.st.waiterStat = TAKE_TO_TABLE;
     // Fim
 
     if (semDown (semgid, sh->mutex) == -1) {                                                      /* enter critical region */
@@ -183,9 +200,8 @@ static void processOrder ()
     }
 
     //TODO insert your code here
-    sh->fSt.waiterRequest.reqType = lastGroup; // não sei se basta fazer isto
-    sh->fSt.waiterRequest.reqGroup = -1; // em probDataStruct.h diz (dummy if request source is chef)
-    sh->fSt.st.chefStat = REST; // acho que descansar é no final
+
+    sh->fSt.st.chefStat = WAIT_FOR_ORDER;
     saveState(nFic, &sh->fSt);
 
     // Fim
@@ -196,11 +212,12 @@ static void processOrder ()
     }
 
     //TODO insert your code here
-
+    
     if (semUp (semgid, sh->waiterRequest) == -1) {                                             /* exit critical region */
         perror ("error on the up operation for semaphore access");
         exit (EXIT_FAILURE);
     }
+
 
     // Fim
 }
