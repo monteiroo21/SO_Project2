@@ -169,6 +169,7 @@ static request waitForClientOrChef()
     }
 
     // TODO insert your code here
+
     req = sh->fSt.waiterRequest; // pedido do chefe ou de um cliente. Duvida: Tenho que distinguir?
     saveState(nFic, &sh->fSt); 
     
@@ -216,7 +217,7 @@ static void informChef (int n)
     
     // TODO insert your code here
 
-    if (semUp(semgid, sh->requestReceived) == -1) {
+    if (semUp(semgid, *(sh->requestReceived)) == -1) {
         perror("error on the up operation for semaphore access");
         exit(EXIT_FAILURE);
     }
@@ -250,16 +251,15 @@ static void takeFoodToTable (int n)
     sh->fSt.st.waiterStat = TAKE_TO_TABLE;
     saveState(nFic, &sh->fSt);
 
-    if (semUp(semgid, sh->foodArrived) == -1) {
+    if (semUp(semgid, *(sh->foodArrived)) == -1) {
         perror("error on the up operation for semaphore access");
         exit (EXIT_FAILURE);
     }
 
-    // Fim
+    // fim
     
     if (semUp (semgid, sh->mutex) == -1)  {                                                  /* exit critical region */
         perror ("error on the down operation for semaphore access (WT)");
         exit (EXIT_FAILURE);
     }
 }
-
