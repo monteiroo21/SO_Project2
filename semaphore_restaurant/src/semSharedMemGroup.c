@@ -74,7 +74,7 @@ int main (int argc, char *argv[])
        setbuf(stderr,NULL);
     }
 
-    n = (unsigned int) strtol (argv[1], &tinp, 0);
+    n = (unsigned int) strtol (argv[1], &tinp, 0); // "int id" do grupo. Nota: A função strtol é usada para converter uma string para um valor inteiro. 
     if ((*tinp != '\0') || (n >= MAXGROUPS )) { 
         fprintf (stderr, "Group process identification is wrong!\n");
         return EXIT_FAILURE;
@@ -106,7 +106,7 @@ int main (int argc, char *argv[])
 
 
     /* simulation of the life cycle of the group */
-    goToRestaurant(n);
+    goToRestaurant(n); // n é o id do grupo
     checkInAtReception(n);
     orderFood(n);
     waitFood(n);
@@ -129,7 +129,7 @@ int main (int argc, char *argv[])
  * 
  *  \param stddev controls standard deviation of distribution
  */
-static double normalRand(double stddev)
+static double normalRand(double stddev) // Nota: Vai ser usada nas 2 funções seguintes: goToRestaurant e eat
 {
    int i;
 
@@ -151,10 +151,10 @@ static double normalRand(double stddev)
  */
 static void goToRestaurant (int id)
 {
-    double startTime = sh->fSt.startTime[id] + normalRand(STARTDEV);
+    double startTime = sh->fSt.startTime[id] + normalRand(STARTDEV); // Nota: "static SHARED_DATA *sh" -> pointer to shared memory region 
     
     if (startTime > 0.0) {
-        usleep((unsigned int) startTime );
+        usleep((unsigned int) startTime ); // Nota: A função usleep suspende a execução de um programa por um número especificado de microssegundos.
     }
 }
 

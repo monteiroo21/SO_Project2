@@ -4,7 +4,7 @@
  *  \brief Problem name: Restaurant
  *
  *  Synchronization based on semaphores and shared memory.
- *  Implementation with SVIPC.
+ *  Implementation with SVIPC. Nota: System V Inter-Process Communication, que é um conjunto de mecanismos de comunicação interprocessual em sistemas Unix-like.
  *
  *  \brief Definition of the shared data and the synchronization devices.
  *
