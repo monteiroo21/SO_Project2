@@ -188,8 +188,13 @@ static void eat (int id)
  */
 static void checkInAtReception(int id)
 {
+    // Não estou bem a ver como vou fazer tanto esta como a última, por isso é que ainda não fiz mais
     // TODO insert your code here
+    sh->fSt.st.groupStat[id] = GOTOREST;
+    sh->fSt.groupsWaiting++;
+    saveState(nFic, &sh->fSt);
 
+    // fim
 
     if (semDown (semgid, sh->mutex) == -1) {                                                  /* enter critical region */
         perror ("error on the down operation for semaphore access (CT)");
@@ -197,6 +202,11 @@ static void checkInAtReception(int id)
     }
 
     // TODO insert your code here
+    sh->fSt.st.groupStat[id] = ATRECEPTION;
+    sh->fSt.groupsWaiting++;
+    saveState(nFic, &sh->fSt);
+
+    // fim
 
     if (semUp (semgid, sh->mutex) == -1) {                                                      /* exit critical region */
         perror ("error on the up operation for semaphore access (CT)");
@@ -224,6 +234,8 @@ static void orderFood (int id)
         perror ("error on the down operation for semaphore access");
         exit(EXIT_FAILURE);
     }
+
+    // fim
 
     if (semDown (semgid, sh->mutex) == -1) {                                                  /* enter critical region */
         perror ("error on the down operation for semaphore access (CT)");
@@ -325,6 +337,9 @@ static void waitFood (int id)
 static void checkOutAtReception (int id)
 {
     // TODO insert your code here
+    sh->fSt.st.groupStat[id] = CHECKOUT;
+    saveState(nFic, &sh->fSt);
+    // Esta função ainda está completamente incompleta, porque preciso primeiro de perceber como ver se recepcionista está available e se CHECKOUT é o que eu penso que é.
 
     if (semDown (semgid, sh->mutex) == -1) {                                                  /* enter critical region */
         perror ("error on the down operation for semaphore access (CT)");
