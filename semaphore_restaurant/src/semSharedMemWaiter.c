@@ -169,7 +169,8 @@ static request waitForClientOrChef()
     }
 
     // TODO insert your code here
-    
+    req = sh->fSt.waiterRequest; // pedido do chefe ou de um cliente. Duvida: Tenho que distinguir?
+    saveState(nFic, &sh->fSt); 
     
     // Fim
 
