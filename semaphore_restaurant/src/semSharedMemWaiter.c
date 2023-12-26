@@ -172,7 +172,7 @@ static request waitForClientOrChef()
 
     req = sh->fSt.waiterRequest; // pedido do chefe ou de um cliente. Duvida: Tenho que distinguir?
     saveState(nFic, &sh->fSt); 
-    
+
     // Fim
 
     if (semUp (semgid, sh->mutex) == -1) {                                                  /* exit critical region */
@@ -242,6 +242,7 @@ static void informChef (int n)
 
 static void takeFoodToTable (int n)
 {
+    // n corresponde ao grupo que é para entregar
     if (semDown (semgid, sh->mutex) == -1)  {                                                  /* enter critical region */
         perror ("error on the up operation for semaphore access (WT)");
         exit (EXIT_FAILURE);

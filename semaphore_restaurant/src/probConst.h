@@ -18,12 +18,12 @@
 /** \brief number of tables */
 #define  NUMTABLES        2 
 /** \brief controls time taken to cook */
-#define  MAXCOOK        100
+#define  MAXCOOK        0   //100 -> Meti a zero para remover aleatoriedade e ser mais fácil de comparar ./test.sh com os outros testes !!
 
 /** \brief controls start time standard deviation */
-#define  STARTDEV         4 
+#define  STARTDEV         0  //4 -> Meti a zero para remover aleatoriedade e ser mais fácil de comparar ./test.sh com os outros testes !!
 /** \brief controls eat time standard deviation */
-#define  EATDEV           4 
+#define  EATDEV           0  //4 -> Meti a zero para remover aleatoriedade e ser mais fácil de comparar ./test.sh com os outros testes !!
 
 /** \brief id of table request (group->receptionist) */
 #define TABLEREQ   1
@@ -70,7 +70,8 @@
 #define  TAKE_TO_TABLE      2
 
 /* Receptionist state constants */
-
+/** \brief waiter waits for food request */
+#define  WAIT_REQUEST   0 // ADICIONEI. ACHO QUE O PROF. SE ESQUECEU
 /** \brief waiter waits for food request */
 #define  ASSIGNTABLE        1
 /** \brief waiter reiceives payment */
