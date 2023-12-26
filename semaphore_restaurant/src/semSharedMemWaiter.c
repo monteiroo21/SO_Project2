@@ -226,7 +226,7 @@ static void informChef (int n)
     
 
     // semaphore used by groups to wait for waiter ackowledge – val = 0
-    if (semUp(semgid, (sh->requestReceived[sh->fSt.assignedTable[n]])) == -1) {
+    if (semUp(semgid, (sh->requestReceived[TABLEREQ])) == -1) {
         perror("error on the up operation for semaphore access");
         exit(EXIT_FAILURE);
     }
@@ -261,7 +261,7 @@ static void takeFoodToTable (int n)
     sh->fSt.st.waiterStat = TAKE_TO_TABLE;
     saveState(nFic, &sh->fSt);
 
-    if (semUp(semgid, (sh->foodArrived[sh->fSt.assignedTable[n]])) == -1) {
+    if (semUp(semgid, (sh->foodArrived[TABLEREQ])) == -1) {
         perror("error on the up operation for semaphore access");
         exit (EXIT_FAILURE);
     }
