@@ -142,13 +142,11 @@ static void waitForOrder ()
      
 
     //TODO insert your code here
-    // Nota: acho que deve ser dentro do if() como fiz
-
     sh->fSt.st.chefStat = COOK;
     saveState(nFic,&sh->fSt);
 
     sh->fSt.foodOrder = 0; // flag of food request from waiter to chef
-    lastGroup = sh->fSt.foodGroup; // foddGroup -> group associated to food request from waiter to chef 
+    lastGroup = sh->fSt.foodGroup; // foodGroup -> group associated to food request from waiter to chef 
     // Fim
 
     if (semUp (semgid, sh->mutex) == -1) {                                                      /* exit critical region */
@@ -158,7 +156,7 @@ static void waitForOrder ()
 
     //TODO insert your code here
 
-    // semáforo orderReceived -> Received order should be acknowledged.
+    // Avisar o grupo que o chefe recebeu o pedido -> Received order should be acknowledged.
     if (semUp (semgid, sh->orderReceived) == -1) {                                               /* enter critical region */
         perror ("error on the down operation for semaphore access");
         exit (EXIT_FAILURE);
@@ -178,7 +176,7 @@ static void waitForOrder ()
  */
 static void processOrder ()
 {
-    usleep((unsigned int) floor ((MAXCOOK * random ()) / RAND_MAX + 100.0));
+    usleep((unsigned int) floor ((MAXCOOK * random ()) / RAND_MAX + 100.0)); // cozinhar -> ele fica "preso" aqui
 
     //TODO insert your code here
     
@@ -199,7 +197,7 @@ static void processOrder ()
 
     sh->fSt.st.chefStat = WAIT_FOR_ORDER;
     
-    sh->fSt.waiterRequest.reqType = FOODREADY;
+    sh->fSt.waiterRequest.reqType = FOODREADY; // também pode ser "FOODREQ" -> Ver "semSharedMemWaiter.c"
     sh->fSt.waiterRequest.reqGroup = lastGroup;
 
     
@@ -212,7 +210,7 @@ static void processOrder ()
     }
 
     //TODO insert your code here
-    // semaphore used by groups and chef to wait before issuing waiter request - val = 1
+    // semaphore used by waiter to wait for requests
     if (semUp (semgid, sh->waiterRequest) == -1) {                                             /* exit critical region */
         perror ("error on the up operation for semaphore access");
         exit (EXIT_FAILURE);
