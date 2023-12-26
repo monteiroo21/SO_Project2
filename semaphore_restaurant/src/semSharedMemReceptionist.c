@@ -206,7 +206,8 @@ static request waitForGroup()
 
     // TODO insert your code here
 
-    ret.reqType = sh->fSt.receptionistRequest.reqType; // pedido do chefe ou de um cliente. Duvida: Tenho que distinguir?
+    ret.reqType = sh->fSt.receptionistRequest.reqType; // pedido do chefe ou de um cliente. Tenho que distinguir
+    ret.reqGroup = sh->fSt.receptionistRequest.reqType; // pedido do chefe ou de um cliente. Tenho que distinguir
 
     if (semUp (semgid, sh->receptionistReq) == -1) {
         perror ("error on the up operation for semaphore access");
@@ -265,7 +266,7 @@ static void provideTableOrWaitingRoom (int n)
     sh->fSt.st.receptionistStat = ASSIGNTABLE;
     saveState(nFic, &sh->fSt);
 
-    // não sei se aqui é algum semáforo ou vem alguma das funções que eu ainda não completei
+    // não sei se aqui é algum semáforo ou vem alguma das funções que eu ainda não completei amanhã trato disso
 
     if (semUp (semgid, sh->mutex) == -1) {                                               /* exit critical region */
         perror ("error on the down operation for semaphore access (WT)");
