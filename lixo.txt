@@ -156,7 +156,7 @@ static request waitForClientOrChef()
 
     // TODO insert your code here
     //  semaphore used by waiter to wait for requests – val = 0
-    if (semDown(semgid, sh->waiterRequest) == -1)      {                                    /* exit critical region */
+    if (semUp(semgid, sh->waiterRequest) == -1)      {                                    /* exit critical region */
         perror ("error on the down operation for semaphore access");
         exit (EXIT_FAILURE);
     }
