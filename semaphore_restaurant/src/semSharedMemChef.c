@@ -210,7 +210,7 @@ static void processOrder ()
     }
 
     //TODO insert your code here
-    // semaphore used by waiter to wait for requests
+    // 
     if (semUp (semgid, sh->waiterRequest) == -1) {                                             /* exit critical region */
         perror ("error on the up operation for semaphore access");
         exit (EXIT_FAILURE);

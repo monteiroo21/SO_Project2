@@ -136,6 +136,7 @@ int main (int argc, char *argv[])
  */
 static request waitForClientOrChef()
 {
+    // Usei 6 semáforos
     request req; 
     if (semDown (semgid, sh->mutex) == -1)  {                                                  /* enter critical region */
         perror ("error on the up operation for semaphore access (WT)");
@@ -170,8 +171,8 @@ static request waitForClientOrChef()
 
     // TODO insert your code here
      
-    req.reqType = sh->fSt.waiterRequest.reqType; // pedido do chefe ou de um cliente. Duvida: Tenho que distinguir?
-
+    req.reqType = sh->fSt.waiterRequest.reqType; // pedido do chefe ou de um cliente. Tenho que distinguir
+    req.reqGroup = sh->fSt.waiterRequest.reqGroup; // pedido do chefe ou de um cliente. Tenho que distinguir
     // Fim
 
     if (semUp (semgid, sh->mutex) == -1) {                                                  /* exit critical region */
@@ -180,6 +181,13 @@ static request waitForClientOrChef()
     }
 
     // TODO insert your code here
+
+    //  The waiter should signal that new requests are possible.
+    if (semUp (semgid, sh->waiterRequestPossible) == -1) {                                                  /* exit critical region */
+        perror ("error on the up operation for semaphore access (WT)");
+        exit (EXIT_FAILURE);
+    }
+
     // Fim
     return req;
 
@@ -215,8 +223,10 @@ static void informChef (int n)
 
     
     // TODO insert your code here
+    
+
     // semaphore used by groups to wait for waiter ackowledge – val = 0
-    if (semUp(semgid, *(sh->requestReceived)) == -1) {
+    if (semUp(semgid, (sh->requestReceived[sh->fSt.assignedTable[n]])) == -1) {
         perror("error on the up operation for semaphore access");
         exit(EXIT_FAILURE);
     }
@@ -251,7 +261,7 @@ static void takeFoodToTable (int n)
     sh->fSt.st.waiterStat = TAKE_TO_TABLE;
     saveState(nFic, &sh->fSt);
 
-    if (semUp(semgid, *(sh->foodArrived)) == -1) {
+    if (semUp(semgid, (sh->foodArrived[sh->fSt.assignedTable[n]])) == -1) {
         perror("error on the up operation for semaphore access");
         exit (EXIT_FAILURE);
     }
