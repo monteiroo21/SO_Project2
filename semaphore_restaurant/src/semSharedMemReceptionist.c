@@ -187,12 +187,11 @@ static int decideNextGroup()
     //TODO insert your code here
 
     for (int groupID = 0; groupID < sh->fSt.nGroups; ++groupID) {
-        if (sh->fSt.assignedTable[groupID] == 0) {                  // not sure if return value is 0, when no assigned table
+        if ((sh->tableDone[sh->fSt.assignedTable[groupID]]) == 0) {                  // not sure if return value is 0, when no assigned table
             return groupID;
         }
     }
     
-
     return -1;
 }
 
@@ -300,6 +299,11 @@ static void provideTableOrWaitingRoom (int n)
     
     saveState(nFic, &sh->fSt);
     // não sei se aqui é algum semáforo ou vem alguma das funções que eu ainda não completei amanhã trato disso
+
+    if (semUp(semgid, sh->waitForTable[n]) == -1) {
+        perror("error on the up operation for semaphore access");
+        exit(EXIT_FAILURE);
+    }
 
     // FIM
 
