@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # comando para remover todos os segmentos de memória compartilhada no Unix-like systems
-./clean
+# ./clean
+ipcrm -a
 
 # Navega para o diretório src
 cd ../src

@@ -142,7 +142,7 @@ static void waitForOrder ()
      
 
     //TODO insert your code here
-    sh->fSt.st.chefStat = COOK;
+    sh->fSt.st.chefStat = COOK; // Nota: só começa a cozinhar na função seguinte
     saveState(nFic,&sh->fSt);
 
     sh->fSt.foodOrder = 0; // flag of food request from waiter to chef
@@ -156,7 +156,7 @@ static void waitForOrder ()
 
     //TODO insert your code here
 
-    // Avisar o grupo que o chefe recebeu o pedido -> Received order should be acknowledged.
+    // -> Received order should be acknowledged.
     if (semUp (semgid, sh->orderReceived) == -1) {                                               /* enter critical region */
         perror ("error on the down operation for semaphore access");
         exit (EXIT_FAILURE);
@@ -176,7 +176,7 @@ static void waitForOrder ()
  */
 static void processOrder ()
 {
-    usleep((unsigned int) floor ((MAXCOOK * random ()) / RAND_MAX + 100.0)); // cozinhar -> ele fica "preso" aqui
+    usleep((unsigned int) floor ((MAXCOOK * random ()) / RAND_MAX + 100.0)); // só começa a cozinhar aqui -> ele fica "preso" aqui
 
     //TODO insert your code here
     
