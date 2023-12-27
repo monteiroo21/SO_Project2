@@ -153,9 +153,7 @@ static int decideTableOrWait(int n)
 
     /** \brief number of groups */
     
-
-
-     if(sh->fSt.groupsWaiting == 0) { // number of groups waiting for table
+    if(sh->fSt.groupsWaiting == 0) { // number of groups waiting for table
         if(sh->fSt.nGroups < NUMTABLES) { // existem mesas vazias
             for (int tableId = 0; tableId < NUMTABLES; ++tableId) {
                 int ocupada = 0; // Flag para verificar se a tabela está ocupada
@@ -187,6 +185,12 @@ static int decideTableOrWait(int n)
 static int decideNextGroup()
 {
     //TODO insert your code here
+
+    for (int groupID = 0; groupID < sh->fSt.nGroups; ++groupID) {
+        if (sh->fSt.assignedTable[groupID] == 0) {                  // not sure if return value is 0, when no assigned table
+            return groupID;
+        }
+    }
     
 
     return -1;
