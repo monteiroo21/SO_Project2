@@ -289,7 +289,7 @@ static void receivePayment (int n)
     sh->fSt.st.receptionistStat = RECVPAY;
     saveState(nFic, &sh->fSt);
 
-    if (semDown(semgid, sh->tableDone) == -1) {
+    if (semDown(semgid, (sh->tableDone[sh->fSt.assignedTable[n]])) == -1) {
         perror ("error on the down operation for semaphore access");
         exit(EXIT_FAILURE);
     }
@@ -302,7 +302,7 @@ static void receivePayment (int n)
     }
 
     // TODO insert your code here
-    if (semUp(semgid, sh->tableDone) == -1) {
+    if (semUp(semgid, (sh->tableDone[sh->fSt.assignedTable[n]])) == -1) {
         perror ("error on the up operation for semaphore access");
         exit(EXIT_FAILURE);
     }
