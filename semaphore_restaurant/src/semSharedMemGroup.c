@@ -211,7 +211,7 @@ static void checkInAtReception(int id)
         exit(EXIT_FAILURE);
     }
 
-    if (semDown(semgid, sh->waitForTable) == -1) {
+    if (semDown(semgid, sh->waitForTable[id]) == -1) {
         perror("error on the down operation for semaphore access");
         exit(EXIT_FAILURE);
     }
@@ -232,7 +232,7 @@ static void checkInAtReception(int id)
         exit(EXIT_FAILURE);
     }
     
-    if (semUp(semgid, sh->waitForTable) == -1) {
+    if (semUp(semgid, sh->waitForTable[id]) == -1) {
         perror("error on the up operation for semaphore access");
         exit(EXIT_FAILURE);
     }

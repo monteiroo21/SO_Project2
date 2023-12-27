@@ -1,4 +1,4 @@
-q#!/bin/bash
+#!/bin/bash
 
 # comando para remover todos os segmentos de memória compartilhada no Unix-like systems
 # ./clean
