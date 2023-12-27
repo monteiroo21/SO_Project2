@@ -192,11 +192,6 @@ static request waitForGroup()
     sh->fSt.st.receptionistStat = WAIT_REQUEST;
     saveState(nFic, &sh->fSt);
 
-    if (semDown (semgid, sh->receptionistReq) == -1) {
-        perror ("error on the down operation for semaphore access");
-        exit (EXIT_FAILURE);
-    }
-
     // FIM
     
     if (semUp (semgid, sh->mutex) == -1)      {                                             /* exit critical region */
@@ -206,11 +201,8 @@ static request waitForGroup()
 
     // TODO insert your code here
 
-    ret.reqType = sh->fSt.receptionistRequest.reqType; // pedido do chefe ou de um cliente. Tenho que distinguir
-    ret.reqGroup = sh->fSt.receptionistRequest.reqType; // pedido do chefe ou de um cliente. Tenho que distinguir
-
-    if (semUp (semgid, sh->receptionistReq) == -1) {
-        perror ("error on the up operation for semaphore access");
+    if (semDown (semgid, sh->receptionistReq) == -1) {
+        perror ("error on the down operation for semaphore access");
         exit (EXIT_FAILURE);
     }
 
@@ -222,10 +214,9 @@ static request waitForGroup()
     }
 
     // TODO insert your code here
-    if (semDown (semgid, sh->receptionistRequestPossible) == -1) {
-        perror ("error on the down operation for semaphore access");
-        exit (EXIT_FAILURE);
-    }
+
+    ret.reqType = sh->fSt.receptionistRequest.reqType; // pedido do chefe ou de um cliente. Tenho que distinguir
+    ret.reqGroup = sh->fSt.receptionistRequest.reqType; // pedido do chefe ou de um cliente. Tenho que distinguir
 
     // FIM
 
@@ -268,6 +259,8 @@ static void provideTableOrWaitingRoom (int n)
 
     // não sei se aqui é algum semáforo ou vem alguma das funções que eu ainda não completei amanhã trato disso
 
+    // FIM
+
     if (semUp (semgid, sh->mutex) == -1) {                                               /* exit critical region */
         perror ("error on the down operation for semaphore access (WT)");
         exit (EXIT_FAILURE);
@@ -301,6 +294,8 @@ static void receivePayment (int n)
         exit(EXIT_FAILURE);
     }
 
+    // FIM
+
     if (semUp (semgid, sh->mutex) == -1)  {                                                  /* exit critical region */
      perror ("error on the down operation for semaphore access (WT)");
         exit (EXIT_FAILURE);
@@ -311,5 +306,7 @@ static void receivePayment (int n)
         perror ("error on the up operation for semaphore access");
         exit(EXIT_FAILURE);
     }
+
+    // FIM
 }
 
