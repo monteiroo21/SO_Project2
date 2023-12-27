@@ -172,16 +172,7 @@ static request waitForClientOrChef()
     // TODO insert your code here
      
     req.reqType = sh->fSt.waiterRequest.reqType; // pedido do chefe ou de um grupo. Tenho que distinguir
-    
-
-    if(req.reqType == FOODREQ) {
-        req.reqGroup = sh->fSt.waiterRequest.reqGroup; // pedido de um grupo
-        // printf("Pedido de um grupo -> Grupo: %d \n", req.reqGroup); // DEBUG
-    }
-    else {
-        // req.reqGroup = sh->fSt.waiterRequest.reqGroup; // Se fizer assim dá mal -> diz que o grupo é 0
-        // printf("Pedido de um chefe -> Grupo: %d \n", req.reqGroup); // DEBUG
-    }
+    req.reqGroup = sh->fSt.waiterRequest.reqGroup; // pedido de um grupo
 
     if (semUp (semgid, sh->mutex) == -1) {                                                  /* exit critical region */
         perror ("error on the down operation for semaphore access (WT)");
@@ -221,6 +212,7 @@ static void informChef (int n)
 
     // TODO insert your code here
     sh->fSt.st.waiterStat = INFORM_CHEF;
+    sh->fSt.foodGroup = n;
     sh->fSt.foodOrder = 1;
     saveState(nFic, &sh->fSt);
 
