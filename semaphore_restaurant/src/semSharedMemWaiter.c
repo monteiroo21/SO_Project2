@@ -171,9 +171,17 @@ static request waitForClientOrChef()
 
     // TODO insert your code here
      
-    req.reqType = sh->fSt.waiterRequest.reqType; // pedido do chefe ou de um cliente. Tenho que distinguir
-    req.reqGroup = sh->fSt.waiterRequest.reqGroup; // pedido do chefe ou de um cliente. Tenho que distinguir
-    // Fim
+    req.reqType = sh->fSt.waiterRequest.reqType; // pedido do chefe ou de um grupo. Tenho que distinguir
+    
+
+    if(req.reqType == FOODREQ) {
+        req.reqGroup = sh->fSt.waiterRequest.reqGroup; // pedido de um grupo
+        // printf("Pedido de um grupo -> Grupo: %d \n", req.reqGroup); // DEBUG
+    }
+    else {
+        // req.reqGroup = sh->fSt.waiterRequest.reqGroup; // Se fizer assim dá mal -> diz que o grupo é 0
+        // printf("Pedido de um chefe -> Grupo: %d \n", req.reqGroup); // DEBUG
+    }
 
     if (semUp (semgid, sh->mutex) == -1) {                                                  /* exit critical region */
         perror ("error on the down operation for semaphore access (WT)");
@@ -227,6 +235,7 @@ static void informChef (int n)
     // TODO insert your code here
     
     // Grupos esperam a confirmação (used by groups to wait for waiter ackowledge)
+    // printf("Acho que aqui está bem. Grupo: %d \n", n);
     if (semUp(semgid, (sh->requestReceived[sh->fSt.assignedTable[n]])) == -1) {
         perror("error on the up operation for semaphore access");
         exit(EXIT_FAILURE);
@@ -270,11 +279,12 @@ static void takeFoodToTable (int n)
     // TODO insert your code here
     sh->fSt.st.waiterStat = TAKE_TO_TABLE;
     saveState(nFic, &sh->fSt);
-
+    // printf("Está mal. Grupo: %d \n", sh->fSt.foodGroup);
     if (semUp(semgid, (sh->foodArrived[sh->fSt.assignedTable[n]])) == -1) {
         perror("error on the up operation for semaphore access");
         exit (EXIT_FAILURE);
     }
+    
 
     // fim
     
