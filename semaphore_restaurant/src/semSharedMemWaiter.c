@@ -171,8 +171,8 @@ static request waitForClientOrChef()
 
     // TODO insert your code here
      
-    req.reqType = sh->fSt.waiterRequest.reqType; // pedido do chefe ou de um grupo. Tenho que distinguir
-    req.reqGroup = sh->fSt.waiterRequest.reqGroup; // pedido de um grupo
+    req.reqType = sh->fSt.waiterRequest.reqType; // pedido do chefe ou de um grupo. reqType será: FOODREQ (GRUPO) OU FOODREADY (CHEFE)
+    req.reqGroup = sh->fSt.waiterRequest.reqGroup; 
 
     if (semUp (semgid, sh->mutex) == -1) {                                                  /* exit critical region */
         perror ("error on the down operation for semaphore access (WT)");
