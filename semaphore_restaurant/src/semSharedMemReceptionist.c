@@ -150,25 +150,25 @@ int main (int argc, char *argv[])
 static int decideTableOrWait(int n)
 {
      //TODO insert your code here
-    printf("Chegada do grupo: %d \n", n); // DEBUG
+    // printf("Chegada do grupo: %d \n", n); // DEBUG
     /** \brief number of groups */
     
     if(sh->fSt.groupsWaiting == 0) { // number of groups waiting for table
         
         for (int tableId = 0; tableId < NUMTABLES; ++tableId) {
-            printf("Será que pode sentar-se na mesa %d ? \n", tableId);
+            // printf("Será que pode sentar-se na mesa %d ? \n", tableId);
             int ocupada = 0; // Flag para verificar se a tabela está ocupada
             for (int groupID = 0; groupID < sh->fSt.nGroups; ++groupID) {
-                printf("Grupo ID: %d ; TableID: %d \n", groupID, sh->fSt.assignedTable[groupID] ); // DEBUG
+                // printf("Grupo ID: %d ; TableID: %d \n", groupID, sh->fSt.assignedTable[groupID] ); // DEBUG
                 if (sh->fSt.assignedTable[groupID] == tableId) {
-                    printf("A mesa %d está ocupada pelo grupo %d \n", tableId, groupID);
+                    // printf("Não, a mesa %d está ocupada pelo grupo %d \n", tableId, groupID);
                     ocupada = 1; // 
                     break;
                 }   
             }
             if (!ocupada) {
                 // Encontrou uma tabela vazia, retorne o ID da tabela
-                printf("Pode sentar-se na mesa %d \n", tableId);
+                // printf("Sim, pode sentar-se na mesa %d \n", tableId);
                 return tableId;
             }
         }   
@@ -189,8 +189,9 @@ static int decideNextGroup()
 {
     //TODO insert your code here
 
-    for (int groupID = 0; groupID < sh->fSt.nGroups; ++groupID) {
+    for (int groupID = 0; groupID < sh->fSt.nGroups; ++groupID) { // ERRO: ESCOLHE O QUE TIVER MENOR ID DOS QUE ESTIVEREM NA FILA DE ESPERA, DEVIA SER O QUE ESTÁ HÁ + TEMPO
         if ( groupRecord[groupID] == WAIT ) {  // groupRecord -> receptioninst view on each group evolution (useful to decide table binding)
+            // printf("Grupo escolhido para essa mesa foi o Nº %d \n",groupID);
             return groupID;
         }
     }
@@ -288,7 +289,7 @@ static void provideTableOrWaitingRoom (int n)
     sh->fSt.st.receptionistStat = ASSIGNTABLE;
     
     int ret = decideTableOrWait(n); // returns table id or -1 (in case of wait decision)
-    printf("Retorno da função (id da table ou -1): %d \n", ret); // DEBUG
+    // printf("Retorno da função (id da table ou -1): %d \n", ret); // DEBUG
 
     if( ret == -1) { // group have to wait
         groupRecord[n] = WAIT; 
@@ -346,6 +347,24 @@ static void receivePayment (int n)
         exit(EXIT_FAILURE);
     }
     
+    // If there are waiting groups, receptionist should check if table that just became vacant should be occupied.
+    // printf("Grupo Nº%d pagou e saiu da mesa %d. \n", n, sh->fSt.assignedTable[n]);
+    int ret = decideNextGroup();
+
+    if(ret != -1) { // returns group id
+        // sh->fSt.assignedTable[n] -> corresponde à mesa que ficou vazia. n era o grupo que estava lá
+        sh->fSt.assignedTable[ret] = sh->fSt.assignedTable[n];
+        groupRecord[ret] = ATTABLE;
+        sh->fSt.groupsWaiting--;
+
+        if (semUp(semgid, sh->waitForTable[ret]) == -1) {
+            perror("error on the up operation for semaphore access");
+            exit(EXIT_FAILURE);
+        }
+    }
+  
+
+    sh->fSt.assignedTable[n] = -1;
 
     // FIM
 
@@ -355,23 +374,13 @@ static void receivePayment (int n)
     }
 
     // TODO insert your code here
-    // If there are waiting groups, receptionist should check if table that just became vacant should be occupied.
-    if(sh->fSt.groupsWaiting > 0) {
-        int ret = decideNextGroup();
+    
 
-        if(ret == -1) { // group have to wait
-            groupRecord[ret] = WAIT;
-            sh->fSt.groupsWaiting++;
-        }
-        else { // returns group id
-            // sh->fSt.assignedTable[n] -> corresponde à mesa que ficou vazia. n era o grupo que estava lá
-            sh->fSt.assignedTable[ret] = sh->fSt.assignedTable[n];
-            groupRecord[ret] = ATTABLE;
-            sh->fSt.groupsWaiting--;
-        }
+
+    if (semUp(semgid, sh->receptionistRequestPossible) == -1) {
+                perror("error on the up operation for semaphore access");
+                exit(EXIT_FAILURE);
     }
-
-    sh->fSt.assignedTable[n] = -1;
     
 
     // FIM
