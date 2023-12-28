@@ -363,7 +363,6 @@ static void receivePayment (int n)
         }
     }
   
-
     sh->fSt.assignedTable[n] = -1;
 
     // FIM
@@ -375,7 +374,6 @@ static void receivePayment (int n)
 
     // TODO insert your code here
     
-
 
     if (semUp(semgid, sh->receptionistRequestPossible) == -1) {
                 perror("error on the up operation for semaphore access");
