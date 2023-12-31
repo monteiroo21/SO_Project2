@@ -220,7 +220,7 @@ static request waitForGroup()
 
     // TODO insert your code here
     // Receptionist updates state
-    sh->fSt.st.receptionistStat = WAIT_REQUEST;
+    sh->fSt.st.receptionistStat = WAIT_FOR_REQUEST;
     saveState(nFic, &sh->fSt);
 
     // FIM
