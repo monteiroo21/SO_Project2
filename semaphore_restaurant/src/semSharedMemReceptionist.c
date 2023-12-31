@@ -190,7 +190,7 @@ static int decideNextGroup()
     //TODO insert your code here
     if(sh->fSt.groupsWaiting == 0) return -1;
 
-    for (int groupID = 0; groupID < sh->fSt.nGroups; ++groupID) { // ERRO: ESCOLHE O QUE TIVER MENOR ID DOS QUE ESTIVEREM NA FILA DE ESPERA, DEVIA SER O QUE ESTÁ HÁ + TEMPO
+    for (int groupID = 0; groupID < sh->fSt.nGroups; ++groupID) { 
         if ( groupRecord[groupID] == WAIT ) {  // groupRecord -> receptioninst view on each group evolution (useful to decide table binding)
             // printf("Grupo escolhido para essa mesa foi o Nº %d \n",groupID);
             return groupID;
@@ -288,7 +288,8 @@ static void provideTableOrWaitingRoom (int n)
     // TODO insert your code here
     // Receptionist updates state
     sh->fSt.st.receptionistStat = ASSIGNTABLE;
-    
+    saveState(nFic, &sh->fSt);
+
     int ret = decideTableOrWait(n); // returns table id or -1 (in case of wait decision)
     // printf("Retorno da função (id da table ou -1): %d \n", ret); // DEBUG
 
@@ -306,8 +307,6 @@ static void provideTableOrWaitingRoom (int n)
         }
     }
     
-    
-    saveState(nFic, &sh->fSt);
     
 
     // FIM
