@@ -216,6 +216,8 @@ static void informChef (int n)
     sh->fSt.foodOrder = 1;
     saveState(nFic, &sh->fSt);
 
+    int assignedTable = sh->fSt.assignedTable[n];
+
     // Fim
     
     if (semUp (semgid, sh->mutex) == -1)                                                   /* exit critical region */
@@ -228,7 +230,7 @@ static void informChef (int n)
     
     // Grupos esperam a confirmação (used by groups to wait for waiter ackowledge)
     // printf("Acho que aqui está bem. Grupo: %d \n", n);
-    if (semUp(semgid, (sh->requestReceived[sh->fSt.assignedTable[n]])) == -1) {
+    if (semUp(semgid, (sh->requestReceived[assignedTable])) == -1) {
         perror("error on the up operation for semaphore access");
         exit(EXIT_FAILURE);
     }
