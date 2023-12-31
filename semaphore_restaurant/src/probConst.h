@@ -18,12 +18,12 @@
 /** \brief number of tables */
 #define  NUMTABLES        2 
 /** \brief controls time taken to cook */
-#define  MAXCOOK        0   //100 -> Meti a zero para remover aleatoriedade e ser mais fácil de comparar ./test.sh com os outros testes !!
+#define  MAXCOOK        100000   //100 -> Meti a zero para remover aleatoriedade e ser mais fácil de comparar ./test.sh com os outros testes !!
 
 /** \brief controls start time standard deviation */
-#define  STARTDEV         0  //4 -> Meti a zero para remover aleatoriedade e ser mais fácil de comparar ./test.sh com os outros testes !!
+#define  STARTDEV         40000  //4 -> Meti a zero para remover aleatoriedade e ser mais fácil de comparar ./test.sh com os outros testes !!
 /** \brief controls eat time standard deviation */
-#define  EATDEV           0  //4 -> Meti a zero para remover aleatoriedade e ser mais fácil de comparar ./test.sh com os outros testes !!
+#define  EATDEV           40000  //4 -> Meti a zero para remover aleatoriedade e ser mais fácil de comparar ./test.sh com os outros testes !!
 
 /** \brief id of table request (group->receptionist) */
 #define TABLEREQ   1
