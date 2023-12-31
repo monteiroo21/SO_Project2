@@ -200,7 +200,6 @@ static void processOrder ()
     sh->fSt.waiterRequest.reqType = FOODREADY; // também pode ser "FOODREQ" -> Ver "semSharedMemWaiter.c"
     sh->fSt.waiterRequest.reqGroup = lastGroup;
 
-    
     saveState(nFic, &sh->fSt);
     // Fim
 

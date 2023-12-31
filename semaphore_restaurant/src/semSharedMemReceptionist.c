@@ -188,6 +188,7 @@ static int decideTableOrWait(int n)
 static int decideNextGroup()
 {
     //TODO insert your code here
+    if(sh->fSt.groupsWaiting == 0) return -1;
 
     for (int groupID = 0; groupID < sh->fSt.nGroups; ++groupID) { // ERRO: ESCOLHE O QUE TIVER MENOR ID DOS QUE ESTIVEREM NA FILA DE ESPERA, DEVIA SER O QUE ESTÁ HÁ + TEMPO
         if ( groupRecord[groupID] == WAIT ) {  // groupRecord -> receptioninst view on each group evolution (useful to decide table binding)
