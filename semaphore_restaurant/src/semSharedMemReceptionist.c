@@ -341,11 +341,11 @@ static void receivePayment (int n)
     groupRecord[n] = DONE;
     saveState(nFic, &sh->fSt);
 
+    int assignedTable = sh->fSt.assignedTable[n];
+    sh->fSt.assignedTable[n] = -1;
+
     // receives payment
-    if (semUp(semgid, (sh->tableDone[sh->fSt.assignedTable[n]])) == -1) {
-        perror ("error on the down operation for semaphore access");
-        exit(EXIT_FAILURE);
-    }
+    
     
     // If there are waiting groups, receptionist should check if table that just became vacant should be occupied.
     // printf("Grupo Nº%d pagou e saiu da mesa %d. \n", n, sh->fSt.assignedTable[n]);
@@ -353,17 +353,17 @@ static void receivePayment (int n)
 
     if(ret != -1) { // returns group id
         // sh->fSt.assignedTable[n] -> corresponde à mesa que ficou vazia. n era o grupo que estava lá
-        sh->fSt.assignedTable[ret] = sh->fSt.assignedTable[n];
-        groupRecord[ret] = ATTABLE;
-        sh->fSt.groupsWaiting--;
+        sh->fSt.assignedTable[ret] = assignedTable;
+        
 
         if (semUp(semgid, sh->waitForTable[ret]) == -1) {
             perror("error on the up operation for semaphore access");
             exit(EXIT_FAILURE);
         }
+        sh->fSt.groupsWaiting--;
+        groupRecord[ret] = ATTABLE;
     }
-  
-    sh->fSt.assignedTable[n] = -1;
+    
 
     // FIM
 
@@ -374,10 +374,9 @@ static void receivePayment (int n)
 
     // TODO insert your code here
     
-
-    if (semUp(semgid, sh->receptionistRequestPossible) == -1) {
-                perror("error on the up operation for semaphore access");
-                exit(EXIT_FAILURE);
+    if (semUp(semgid, (sh->tableDone[assignedTable])) == -1) {
+        perror ("error on the down operation for semaphore access");
+        exit(EXIT_FAILURE);
     }
     
 
